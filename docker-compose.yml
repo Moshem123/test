@@ -2,7 +2,7 @@ version: '3'
 
 services:
   database: 
-    build: redis/
+    build: ./redis
     restart: always
   
   elasticsearch: 

@@ -1,5 +1,6 @@
 #!/bin/bash
 # Add docker-compose to startup
+set -eo pipefail
 usage() {
 	echo "Usage: $0 {PROJECT_NAME} {COMPOSE_FILE}"
 }
@@ -51,7 +52,7 @@ fi
 if [[ -d $PROJECT_DIR ]];then
 	echo "Directory $PROJECT_DIR ALREADY EXISTS"
 else
-	mkdir $PROJECT_DIR/
+	mkdir -p $PROJECT_DIR/
 fi
 
 if [[ -f $PROJECT_DIR/$COMPOSE_FILE_NAME ]];then
