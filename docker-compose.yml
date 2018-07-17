@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  database: 
+    image: redis
+  
+  elasticsearch: 
+    image: elasticsearch
