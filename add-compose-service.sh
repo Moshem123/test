@@ -2,7 +2,7 @@
 # Add docker-compose to startup
 set -eo pipefail
 usage() {
-	echo "Usage: $0 {PROJECT_NAME} {COMPOSE_FILE}"
+	echo "Usage: $0 {PROJECT_NAME} {COMPOSE_DIR}"
 }
 if [[ -z $2 ]];then
 	usage
@@ -10,12 +10,11 @@ if [[ -z $2 ]];then
 fi
 
 PROJECT=$1
-COMPOSE_FILE=$(realpath $2)
+COMPOSE_DIR=$2
 SYSTEMCTL_FILE=/etc/systemd/system/docker-compose@.service
 PROJECT_DIR=/etc/docker/compose/$PROJECT
-COMPOSE_FILE_NAME=${COMPOSE_FILE##*/}
-if [[ $COMPOSE_FILE_NAME != "docker-compose.yml" ]];then
-	echo "DOCKER COMPOSE FILE HAS AN UNUSUAL NAME: $COMPOSE_FILE_NAME"
+if ! [[ -f $COMPOSE_DIR/docker-compose.yml ]];then
+	echo "THERE'S NO DOCKER COMPOSE FILE IN THE GIVEN DIRECTORY: $COMPOSE_DIR"
 	echo "Exiting"
 	exit 1
 fi
@@ -52,14 +51,10 @@ fi
 if [[ -d $PROJECT_DIR ]];then
 	echo "Directory $PROJECT_DIR ALREADY EXISTS"
 else
-	mkdir -p $PROJECT_DIR/
+	mkdir -p ${PROJECT_DIR%/*}
+	ln -s $COMPOSE_DIR $PROJECT_DIR
 fi
 
-if [[ -f $PROJECT_DIR/$COMPOSE_FILE_NAME ]];then
-	echo "$COMPOSE_FILE_NAME ALREADY EXISTS IN THE DESTINATION DIRECTORY: $PROJECT_DIR"
-else
-	ln -s $COMPOSE_FILE $PROJECT_DIR/
-fi
 
 echo -e "Service added!\nYou can start by typing `tput smul`systemctl start docker-compose@$PROJECT`tput rmul`\nOr to add it to startup by typing `tput smul`systemctl enable docker-compose@$PROJECT`tput rmul`"
 exit 0
