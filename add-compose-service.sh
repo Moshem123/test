@@ -31,21 +31,20 @@ if ! [[ -f $SYSTEMCTL_FILE ]];then
 	WorkingDirectory=/etc/docker/compose/%i
 
 	# Remove old containers, images and volumes
-	ExecStartPre=/bin/docker-compose down -v
-	ExecStartPre=/bin/docker-compose rm -fv
+	ExecStartPre=/usr/local/bin/docker-compose down -v
+	ExecStartPre=/usr/local/bin/docker-compose rm -fv
 	ExecStartPre=-/bin/bash -c 'docker volume ls -qf "name=%i_" | xargs docker volume rm'
 	ExecStartPre=-/bin/bash -c 'docker network ls -qf "name=%i_" | xargs docker network rm'
 	ExecStartPre=-/bin/bash -c 'docker ps -aqf "name=%i_*" | xargs docker rm'
 
 	# Compose up
-	ExecStart=/usr/bin/docker-compose up
+	ExecStart=/usr/local/bin/docker-compose up
 
 	# Compose down, remove containers and volumes
-	ExecStop=/usr/bin/docker-compose down -v
+	ExecStop=/usr/local/bin/docker-compose down -v
 
 	[Install]
 	WantedBy=multi-user.target
-	EOF
 fi
 
 if [[ -d $PROJECT_DIR ]];then
