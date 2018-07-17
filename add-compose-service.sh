@@ -10,7 +10,7 @@ if [[ -z $2 ]];then
 fi
 
 PROJECT=$1
-COMPOSE_FILE=$2
+COMPOSE_FILE=$(realpath $2)
 SYSTEMCTL_FILE=/etc/systemd/system/docker-compose@.service
 PROJECT_DIR=/etc/docker/compose/$PROJECT
 COMPOSE_FILE_NAME=${COMPOSE_FILE##*/}
