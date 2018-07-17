@@ -10,7 +10,3 @@ services:
     restart: always
     healthcheck:
       test: curl --silent --fail localhost:9200/_cluster/health || exit 1
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
